@@ -1,7 +1,7 @@
+html, body { margin: 0; padding: 0; height: 100%; }
 
 body {
-    color: #FFF;
-    background: #000;
+    background: linear-gradient(to top, #b1eeff, #3061c3);
     /*
     background: radial-gradient(aqua, steelblue);
      */
@@ -11,23 +11,34 @@ body {
     box-sizing: border-box;
 }
 
+#main-container {
+    color: #FFF;
+    background: #000;
+    height: 84%;
+    border: solid white 2px;
+    overflow: hidden;
+}
+
+#title h1{
+    color: white;
+    margin-top: -5px;
+    text-align: center;
+    font-size: 30px;
+}
+
+#globe-box {
+    height: 560px;
+    top:50%;
+}
+
 canvas {
     padding: 0;
     margin: auto;
     display: block;
     width: 100%;
-    height: 100vh;
+    height: 576px;
     position: absolute;
 
-}
-
-.main-container {
-    width: 80%;
-    max-width: 1300px;
-    display: flex;
-    justify-content: center;
-    margin: 0 auto;
-    overflow: hidden;
 }
 
 

@@ -98,7 +98,7 @@ bower install satellite.js
 ### Common.js ([Node.js](https://nodejs.org))
 
 ```js
-var satellite = require('satellite.js');
+var satellite = require('lib/satellite.js/types/index.d.ts');
 ...
 var positionAndVelocity = satellite.sgp4(satrec, time);
 ```
@@ -106,7 +106,8 @@ var positionAndVelocity = satellite.sgp4(satrec, time);
 ### ES ([Babel.js](https://babeljs.io/))
 
 ```js
-import { sgp4 } from 'satellite.js';
+import {sgp4} from 'lib/satellite.js';
+
 ...
 const positionAndVelocity = sgp4(satrec, time);
 ```
