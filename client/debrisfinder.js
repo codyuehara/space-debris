@@ -7,7 +7,53 @@ fetch("./space_data.json")
     .then(response => {
         return response.json();
     })
-    .then(data => console.log(data));
+    .then(data => {
+        //console.log(data)
+        getData(data);
+    });
+
+
+function getData(tle){
+    for (let i = 0; i < tle.length; i++){
+        console.log(tle[i].OBJECT_TYPE);
+        //ex for Atlas Centaur R/B
+        var tle_line1 = tle[i].TLE_LINE1;
+        var tle_line2 = tle[i].TLE_LINE2;
+
+        var satrec = satellite.twoline2satrec(tle_line1, tle_line2);
+
+        var currentPosition = getPosition(satrec, new Date());
+
+//space debris layer
+        var placemarkAttributes = new WorldWind.PlacemarkAttributes(null);
+        placemarkAttributes.imageSource = WorldWind.configuration.baseUrl + "images/dot-red.png";
+        placemarkAttributes.imageScale = 3.0;
+
+        var debrisLayer = new WorldWind.RenderableLayer("Debris");
+        var placemark = new WorldWind.Placemark(currentPosition);
+
+        placemark.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
+        //placemark.label = "Alpha Centaur";
+        placemark.attributes = placemarkAttributes;
+
+        debrisLayer.addRenderable(placemark);
+
+//update WorldWind
+        wwd.addLayer(debrisLayer);
+
+
+
+        wwd.redraw();
+
+// Update Satellite Position
+        window.setInterval(function() {
+            var position = getPosition(satrec, new Date());
+
+            wwd.redraw();
+        }, 0);
+    }
+}
+
 
 //set up NASA WorldWind
 var wwd = new WorldWind.WorldWindow("wwd");
@@ -41,38 +87,3 @@ function getPosition(satrec, time){
     //console.log(longitude + ", " + latitude + ", " + altitude);
     return new WorldWind.Position(longitude, latitude, altitude);
 }
-//ex for Atlas Centaur R/B
-var tle_line1 = '1 06155U 72065B   16111.89078645  .00000269  00000-0  46396-4 0  9993';
-var tle_line2 = '2 06155  35.0043  52.6400 0037491 110.2876 250.1858 14.71170973329733';
-
-var satrec = satellite.twoline2satrec(tle_line1, tle_line2);
-
-var currentPosition = getPosition(satrec, new Date());
-
-//space debris layer
-var placemarkAttributes = new WorldWind.PlacemarkAttributes(null);
-placemarkAttributes.imageSource = WorldWind.configuration.baseUrl + "images/dot-red.png";
-placemarkAttributes.imageScale = 3.0;
-
-var debrisLayer = new WorldWind.RenderableLayer("Debris");
-var placemark = new WorldWind.Placemark(currentPosition);
-
-placemark.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
-placemark.label = "Alpha Centaur";
-placemark.attributes = placemarkAttributes;
-
-debrisLayer.addRenderable(placemark);
-
-//update WorldWind
-wwd.addLayer(debrisLayer);
-
-
-
-wwd.redraw();
-
-// Update Satellite Position
-window.setInterval(function() {
-    var position = getPosition(satrec, new Date());
-
-    wwd.redraw();
-}, 0);
