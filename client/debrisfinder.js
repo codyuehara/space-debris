@@ -15,42 +15,40 @@ fetch("./space_data.json")
 
 function getData(tle){
     for (let i = 0; i < tle.length; i++){
-        console.log(tle[i].OBJECT_TYPE);
-        //ex for Atlas Centaur R/B
-        var tle_line1 = tle[i].TLE_LINE1;
-        var tle_line2 = tle[i].TLE_LINE2;
+        if (tle[i].OBJECT_TYPE != 'PAYLOAD' && tle[i].OBJECT_TYPE != 'TBA'){
+            //console.log(tle[i].OBJECT_TYPE);
+            var tle_line1 = tle[i].TLE_LINE1;
+            var tle_line2 = tle[i].TLE_LINE2;
 
-        var satrec = satellite.twoline2satrec(tle_line1, tle_line2);
+            var satrec = satellite.twoline2satrec(tle_line1, tle_line2);
 
-        var currentPosition = getPosition(satrec, new Date());
+            var currentPosition = getPosition(satrec, new Date());
 
-//space debris layer
-        var placemarkAttributes = new WorldWind.PlacemarkAttributes(null);
-        placemarkAttributes.imageSource = WorldWind.configuration.baseUrl + "images/dot-red.png";
-        placemarkAttributes.imageScale = 3.0;
+            //space debris layer
+            var placemarkAttributes = new WorldWind.PlacemarkAttributes(null);
+            placemarkAttributes.imageSource = WorldWind.configuration.baseUrl + "images/dot-red.png";
+            placemarkAttributes.imageScale = 3.0;
 
-        var debrisLayer = new WorldWind.RenderableLayer("Debris");
-        var placemark = new WorldWind.Placemark(currentPosition);
+            var debrisLayer = new WorldWind.RenderableLayer("Debris");
+            var placemark = new WorldWind.Placemark(currentPosition);
 
-        placemark.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
-        //placemark.label = "Alpha Centaur";
-        placemark.attributes = placemarkAttributes;
+            placemark.altitudeMode = WorldWind.RELATIVE_TO_GROUND;
+            //placemark.label = "Alpha Centaur";
+            placemark.attributes = placemarkAttributes;
 
-        debrisLayer.addRenderable(placemark);
+            debrisLayer.addRenderable(placemark);
 
-//update WorldWind
-        wwd.addLayer(debrisLayer);
-
-
-
-        wwd.redraw();
-
-// Update Satellite Position
-        window.setInterval(function() {
-            var position = getPosition(satrec, new Date());
-
+            //update WorldWind
+            wwd.addLayer(debrisLayer);
             wwd.redraw();
-        }, 0);
+
+            // Update Satellite Position
+            window.setInterval(function() {
+                 var position = getPosition(satrec, new Date());
+                 wwd.redraw();
+             }, 5000);
+        }
+
     }
 }
 
